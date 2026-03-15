@@ -16,14 +16,12 @@ public class BookService {
     String RESET = "\u001B[0m";
     String RED = "\u001B[31m";
     String YELLOW = "\u001B[33m";
-
+    InputHelper inputHelper = new InputHelper();
+    int bookSearchChoice;
     public BookService(BookDatabase bookDatabase, UserDatabase userDatabase) {
         this.bookDatabase = bookDatabase;
         this.userDatabase = userDatabase;
     }
-
-    InputHelper inputHelper = new InputHelper();
-    int bookSearchChoice;
 
     //*********************BOOK-SEARCH-----------------------------
 
