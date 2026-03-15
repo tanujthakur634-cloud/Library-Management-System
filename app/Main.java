@@ -85,6 +85,7 @@ public class Main {
                 System.out.print("\rClosing database connections...");
                 Thread.sleep(700);
                 System.out.println("\r" + CYAN + "CLEAN EXIT: All systems offline.          " + RESET);
+                break outer;
             } else System.out.println(RED + " [!] Error: Enter a Valid Choice (1-2)!!" + RESET);
         }
     }
