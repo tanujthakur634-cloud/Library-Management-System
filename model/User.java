@@ -46,7 +46,7 @@ public class User {
         System.out.println("+-------------------------------------------+");
         System.out.printf("  NAME    : %s\n", name);
         System.out.printf("  PHONE   : %s\n", phoneNo);
-        System.out.printf("  BALANCE : ₹%.2f\n", fine_due);
+        System.out.printf("  BALANCE : ₹%d\n", fine_due);
         System.out.println("+-------------------------------------------+");
     }
 
