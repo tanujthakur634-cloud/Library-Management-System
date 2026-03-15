@@ -3,7 +3,7 @@ package model;
 public class Book {
     private final int ISBN, id;
     private final String author, bookName, genre;
-    boolean isAvailable;
+    private boolean isAvailable;
 
     public Book(int id, int ISBN, String author, String bookName, String genre, boolean isAvailable) {
         this.ISBN = ISBN;
