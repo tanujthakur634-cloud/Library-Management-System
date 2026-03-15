@@ -15,7 +15,7 @@ public class InputHelper {
                 scanner.nextLine();
                 return integer;
             } catch (InputMismatchException e) {
-                System.out.println("Invalid Input\nEnter the value again : ");
+                System.out.println("\u001B[31m" + " [!] ERROR: Input must be a numeric value. Please try again: " + "\u001B[0m");
             }
         }
     }

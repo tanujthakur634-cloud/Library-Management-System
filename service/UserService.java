@@ -16,6 +16,7 @@ public class UserService {
     UserDatabase userDatabase;
     String RED = "\u001B[31m";
     String RESET = "\u001B[0m";
+    String GREEN = "\u001B[32m";
 
     public UserService(UserDatabase userDatabase) {
         this.userDatabase = userDatabase;
@@ -33,16 +34,15 @@ public class UserService {
                 }
                 System.out.println();
             } else {
-                System.out.println("User does not have any Borrowed Books");
+                System.out.println("\n[ℹ] Info: " + user.getName() + " has no active borrowings.");
             }
-        } else
-            System.out.println("User Does not Exist.Add the User First");
+        } else System.out.println(RED + " [!] ERROR: User does not exist." + RESET);
     }
 
     public void addNewUser() {
-        System.out.print("Enter User Name : ");
+        System.out.print("  Enter User Name : ");
         String name = inputHelper.getString();
-        System.out.print("Enter User Phone Number : ");
+        System.out.print("  Enter User Phone Number : ");
         String phoneNo = inputHelper.getString();
         int userID = userDatabase.getLastUserID();
         userID++;
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public User checkUser() {
-        System.out.println("Enter UserID : ");
+        System.out.println("  Enter UserID : ");
         int userID = inputHelper.getInteger();
         return userDatabase.getUser(userID);
     }
@@ -62,7 +62,7 @@ public class UserService {
         User user = checkUser();
         if (user != null) {
             user.userDetails();
-        } else System.out.println("User Does not exists");
+        } else System.out.println(RED + " [!] ERROR: User ID not found in the database." + RESET);
     }
 
     public void printAllUsers() {
@@ -71,8 +71,7 @@ public class UserService {
         System.out.println("-".repeat(65));
 
         for (User user : userDatabase.getUsers().values()) {
-            System.out.printf("%-5d | %-20s | %-15s | ₹%-10d\n",
-                    user.getUserID(), user.getName(), user.getPhoneNo(), user.getFine_due());
+            System.out.printf("%-5d | %-20s | %-15s | ₹%-10d\n", user.getUserID(), user.getName(), user.getPhoneNo(), user.getFine_due());
         }
         System.out.println("=".repeat(65));
     }
@@ -81,7 +80,7 @@ public class UserService {
         User user = checkUser();
         if (user != null) {
             if (user.getFine_due() == 0)
-                System.out.println("No Payment Dues !! ");
+                System.out.println("\n" + GREEN + " [✔] SUCCESS: Account Clear. No outstanding dues found!" + RESET);
             else {
                 System.out.println("\u001B[33m" + "⚠️  ATTENTION: You have an outstanding balance of ₹" + user.getFine_due() + "\u001B[0m");
                 System.out.print(" Would you like to settle this now? (Y/N): ");
@@ -90,7 +89,7 @@ public class UserService {
                 if (c == 'Y' || c == 'y') {
                     payDues(user);
                 } else {
-                    System.out.println("You are requested to pay it before due date else penalty will be charged!!");
+                    System.out.println("\u001B[33m" + "⚠️  ATTENTION: You are requested to pay your dues urgently " + "\u001B[0m");
                 }
             }
         } else {
@@ -99,8 +98,9 @@ public class UserService {
     }
 
     public void payDues(User user) throws InterruptedException {
-
-        System.out.print("1.UPI\t2.Wallet\n->Enter The Payment Mode : ");
+        System.out.println("\n--- SELECT PAYMENT METHOD ---");
+        System.out.printf("  [1] %-10s [2] %-10s\n", "UPI", "WALLET");
+        System.out.print("  Payment Mode > ");
         int choice = inputHelper.getInteger();
 
         PaymentGateway paymentGateway;

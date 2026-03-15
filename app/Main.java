@@ -15,6 +15,7 @@ public class Main {
         UserService userService = new UserService(userDatabase);
         String RED = "\u001B[31m";
         String RESET = "\u001B[0m";
+        String CYAN = "\u001B[36m";
         outer:
         while (true) {
             System.out.println("\n╔══════════════════════════════════════════════════╗");
@@ -22,7 +23,7 @@ public class Main {
             System.out.println("╠══════════════════════════════════════════════════╣");
             System.out.println("║  1. User Service            2. Book Service      ║");
             System.out.println("╚══════════════════════════════════════════════════╝");
-            System.out.print("->Enter Choice : ");
+            System.out.print(" -> Enter Choice : ");
             int ch = inputHelper.getInteger();
             if (ch == 1) {
                 System.out.println("\n---------------------------------------------------------");
@@ -30,13 +31,17 @@ public class Main {
                 System.out.println("---------------------------------------------------------");
                 System.out.print("  [1] Add New User            [2] Check Borrowed Books  \n");
                 System.out.print("  [3] Check Payment Dues      [4] Check User Details    \n");
-                System.out.print("  [5] Print All Users         [0] Exit                  \n");
+                System.out.print("  [5] Print All Users         [0] EXIT                  \n");
                 System.out.println("---------------------------------------------------------");
-                System.out.print("Select Choice  > ");
+                System.out.print("  Select Choice  > ");
                 int choice = inputHelper.getInteger();
                 switch (choice) {
                     case 0 -> {
-                        System.out.println("Exiting...");
+                        System.out.print(CYAN + "Saving session data...");
+                        Thread.sleep(700);
+                        System.out.print("\rClosing database connections...");
+                        Thread.sleep(700);
+                        System.out.println("\r" + CYAN + "CLEAN EXIT: All systems offline.          " + RESET);
                         break outer;
                     }
                     case 1 -> {
@@ -52,13 +57,18 @@ public class Main {
                 System.out.println("\n----------- BOOK SERVICE MENU -----------");
                 System.out.println("  [1] Search Book         [2] Borrow Book");
                 System.out.println("  [3] Return Book         [4] List All Books");
-                System.out.println("  [0] Back to Main Menu");
+                System.out.println("  [0] EXIT");
                 System.out.println("-----------------------------------------");
-                System.out.print("Select an Option: ");
+                System.out.print("  Select an Option: ");
                 int choice = inputHelper.getInteger();
                 switch (choice) {
                     case 0 -> {
-                        System.out.println("Exiting...");
+
+                        System.out.print(CYAN + "Saving session data...");
+                        Thread.sleep(700);
+                        System.out.print("\rClosing database connections...");
+                        Thread.sleep(700);
+                        System.out.println("\r" + CYAN + "CLEAN EXIT: All systems offline.          " + RESET);
                         break outer;
                     }
                     case 1 -> {

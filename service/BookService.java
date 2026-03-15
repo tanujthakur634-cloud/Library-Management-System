@@ -12,6 +12,8 @@ import java.util.Map;
 public class BookService {
     UserDatabase userDatabase;
     BookDatabase bookDatabase;
+    String GREEN = "\u001B[32m";
+    String RESET = "\u001B[0m";
 
     public BookService(BookDatabase bookDatabase, UserDatabase userDatabase) {
         this.bookDatabase = bookDatabase;
@@ -35,7 +37,7 @@ public class BookService {
             for (Book book : bookDatabase.getBookRecord().values()) {
                 if (book.getAuthor().equalsIgnoreCase(authorName)) {
                     if (book.isAvailable()) {
-                        System.out.println("Book Found");
+                        System.out.println("\n" + GREEN + " [✔] BOOK FOUND!" + RESET);
                         book.display();
                         return book;
                     }
@@ -47,7 +49,7 @@ public class BookService {
             Book book = bookDatabase.getBookRecord().get(id);
             if (book != null) {
                 if (book.isAvailable()) {
-                    System.out.println("Book Found");
+                    System.out.println("\n" + GREEN + " [✔] BOOK FOUND!" + RESET);
                     book.display();
                     return book;
                 }

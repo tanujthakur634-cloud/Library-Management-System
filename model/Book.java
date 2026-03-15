@@ -26,10 +26,6 @@ public class Book {
         return bookName;
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
     public boolean isAvailable() {
         return isAvailable;
     }
@@ -39,10 +35,12 @@ public class Book {
     }
 
     public void display() {
-        System.out.println("Book Name : " + bookName);
-        System.out.println("Author : " + author);
-        System.out.println("ISBN : " + ISBN);
-        System.out.println("Genre : " + genre);
-        System.out.println("Book ID : " + id);
+        System.out.println("\n--- BOOK INFORMATION ---");
+        System.out.printf("  %-12s : %s\n", "TITLE", bookName);
+        System.out.printf("  %-12s : %s\n", "AUTHOR", author);
+        System.out.printf("  %-12s : %d\n", "BOOK ID", id);
+        System.out.printf("  %-12s : %d\n", "ISBN", ISBN);
+        System.out.printf("  %-12s : %s\n", "GENRE", genre);
+        System.out.println("------------------------");
     }
 }
