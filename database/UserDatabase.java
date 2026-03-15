@@ -31,14 +31,10 @@ public class UserDatabase {
         return users;
     }
 
-    public void setUsers(Map<Integer, User> users) {
-        this.users = users;
-    }
 
     public Map<User, Map<Integer, Book>> getBorrowedBooks() {
         return borrowedBooks;
     }
-
 
 
     public void addUsers(User user, int userID) {
@@ -47,7 +43,7 @@ public class UserDatabase {
     }
 
     public int getLastUserID() {
-            return users.keySet().stream().max(Integer::compareTo).orElse(0);
+        return users.keySet().stream().max(Integer::compareTo).orElse(0);
     }
 
     public User getUser(int id) {

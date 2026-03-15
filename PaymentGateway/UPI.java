@@ -1,8 +1,10 @@
 package PaymentGateway;
 
+import model.User;
+
 import java.util.Random;
 
-public class UPI implements paymentGateway{
+public class UPI implements PaymentGateway {
 
     @Override
     public boolean processPayment(int amount, int userID) throws InterruptedException {
@@ -13,10 +15,10 @@ public class UPI implements paymentGateway{
     }
 
     @Override
-    public void paymentReceipt(int amount, int userID) {
+    public void paymentReceipt(int amount, int userID, User user) {
         Random random = new Random();
-        int transactionNumber = random.nextInt(100000000,1000000000);
-        System.out.println("Payment Amount : ₹"+amount);
-        System.out.println("Transaction Number : "+transactionNumber);
+        int transactionNumber = random.nextInt(100000000, 1000000000);
+        System.out.println("Payment Amount : ₹" + amount);
+        System.out.println("Transaction Number : " + transactionNumber);
     }
 }

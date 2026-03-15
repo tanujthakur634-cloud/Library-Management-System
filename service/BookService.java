@@ -12,9 +12,10 @@ import java.util.Map;
 public class BookService {
     UserDatabase userDatabase;
     BookDatabase bookDatabase;
-    public BookService(BookDatabase bookDatabase,UserDatabase userDatabase) {
+
+    public BookService(BookDatabase bookDatabase, UserDatabase userDatabase) {
         this.bookDatabase = bookDatabase;
-        this.userDatabase=userDatabase;
+        this.userDatabase = userDatabase;
     }
 
     InputHelper inputHelper = new InputHelper();
@@ -23,8 +24,11 @@ public class BookService {
     //*********************BOOK-SEARCH-----------------------------
 
     public Book searchBook() {
-        System.out.println("Do you want to search the book via Author Name(1) or Book Id(2)  or BookName(3) ? ");
-        bookSearchChoice=inputHelper.getInteger();
+        System.out.println("\n" + "=".repeat(20) + " BOOK SEARCH " + "=".repeat(20));
+        System.out.println(" How would you like to search?");
+        System.out.println(" [1] Author Name  [2] Book ID  [3] Book Name");
+        System.out.print(" Selection > ");
+        bookSearchChoice = inputHelper.getInteger();
         if (bookSearchChoice == 1) {
             System.out.print("Enter Author's Name : ");
             String authorName = inputHelper.getString();
@@ -41,19 +45,17 @@ public class BookService {
             System.out.print("Enter Book ID : ");
             int id = inputHelper.getInteger();
             Book book = bookDatabase.getBookRecord().get(id);
-            if (book!=null){
+            if (book != null) {
                 if (book.isAvailable()) {
                     System.out.println("Book Found");
                     book.display();
                     return book;
                 }
             }
-        }
-
-     else if(bookSearchChoice==3) {
+        } else if (bookSearchChoice == 3) {
             System.out.print("Enter Book Name : ");
-            String bookname=inputHelper.getString();
-            for(Book book : bookDatabase.getBookRecord().values()){
+            String bookname = inputHelper.getString();
+            for (Book book : bookDatabase.getBookRecord().values()) {
                 if (book.getBookName().equalsIgnoreCase(bookname)) {
                     if (book.isAvailable()) {
                         System.out.println("Book Found");
@@ -72,20 +74,23 @@ public class BookService {
     //---------------------BOOK-BORROW-------------------------
 
     public void BookBorrow() {
-        Book book=searchBook();
-        if (book!=null) {
+        Book book = searchBook();
+        if (book != null) {
             UserService userService = new UserService(userDatabase);
             User user = userService.checkUser();
-            if(user!=null) {
-                userDatabase.getBorrowedBooks().computeIfAbsent(user,k->new HashMap<>()).put(book.getId(),book);
+            if (user != null) {
+                userDatabase.getBorrowedBooks().computeIfAbsent(user, k -> new HashMap<>()).put(book.getId(), book);
                 book.setAvailable(false);
-                System.out.println("Book Borrowed Successfully");
+                System.out.println("\u001B[32m" + "✔ SUCCESS: " + book.getBookName() + " has been assigned to " + user.getName() + "." + "\u001B[0m");
+                try {
+                    Thread.sleep(1000); // Wait for 1 second
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            } else {
+                System.out.println("\u001B[31m" + "✖ ERROR: User not found in system." + "\u001B[0m");
             }
-            else{
-                System.out.println("User Not Found ! First add the User to Library Database!!");
-            }
-        }
-        else{
+        } else {
             System.out.println("Book is Unavailable");
         }
     }
@@ -96,7 +101,7 @@ public class BookService {
         System.out.println("Enter the User ID of the person returning the book : ");
         int userID = inputHelper.getInteger();
         User user = userDatabase.getUser(userID);
-        if (user!=null) {
+        if (user != null) {
             Map<Integer, Book> userBorrowed = userDatabase.getBorrowedBooks().get(user);
             if (userBorrowed != null && userBorrowed.containsKey(id)) {
                 userBorrowed.remove(id);
@@ -104,24 +109,41 @@ public class BookService {
                 if (book != null) {
                     book.setAvailable(true);
                     System.out.println("Book returned Successfully");
-                }
-                else
+                    try {
+                        Thread.sleep(1000); // Wait for 1 second
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                } else
                     System.out.println("Error: Book found in user's list but missing from the main library database.");
             } else {
                 System.out.println("This user does not have this book");
             }
-        }
-        else{
+        } else {
             System.out.println("User does not exists");
         }
     }
 
-    public void getAllBooksAvailable(){
-        for (Book book : bookDatabase.getBookRecord().values()){
+    public void getAllBooksAvailable() {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.printf("%-10s | %-25s | %-20s\n", "ID", "BOOK TITLE", "AUTHOR");
+        System.out.println("-".repeat(60));
+
+        boolean found = false;
+        for (Book book : bookDatabase.getBookRecord().values()) {
             if (book.isAvailable()) {
-                book.display();
-                System.out.println("------------------------------");
+                System.out.printf("%-10d | %-25s | %-20s\n", book.getId(), truncate(book.getBookName(), 22), truncate(book.getAuthor(), 18));
+                found = true;
             }
         }
+
+        if (!found) System.out.println("       --- No books currently available ---");
+        System.out.println("=".repeat(60) + "\n");
+    }
+
+    // Helper to keep the table neat
+    private String truncate(String text, int length) {
+        if (text.length() <= length) return text;
+        return text.substring(0, length - 3) + "...";
     }
 }

@@ -1,8 +1,8 @@
 package model;
 
 public class Book {
-    int ISBN, id;
-    String author, bookName, genre;
+    private final int ISBN, id;
+    private final String author, bookName, genre;
     boolean isAvailable;
 
     public Book(int id, int ISBN, String author, String bookName, String genre, boolean isAvailable) {

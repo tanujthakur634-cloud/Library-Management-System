@@ -13,14 +13,26 @@ public class Main {
         UserDatabase userDatabase = new UserDatabase();
         BookService bookService = new BookService(bookDatabase, userDatabase);
         UserService userService = new UserService(userDatabase);
-
+        String RED = "\u001B[31m";
+        String RESET = "\u001B[0m";
         outer:
         while (true) {
-            System.out.println("\n**************LIBRARY_MANAGEMENT_SYSTEM*************\n");
-            System.out.print("USER_SERVICE(1)\tBOOK_SERVICE(2)\n->Enter Your Choice : ");
+            System.out.println("\n╔══════════════════════════════════════════════════╗");
+            System.out.println("║            LIBRARY MANAGEMENT SYSTEM             ║");
+            System.out.println("╠══════════════════════════════════════════════════╣");
+            System.out.println("║  1. User Service            2. Book Service      ║");
+            System.out.println("╚══════════════════════════════════════════════════╝");
+            System.out.print("->Enter Choice : ");
             int ch = inputHelper.getInteger();
             if (ch == 1) {
-                System.out.println("0.Exit\t1.Add New User\t2.Check Borrowed Books\t3.Check if any payment dues\t4.Check User Details\t5.Print all Users\n->Enter Your Choice : ");
+                System.out.println("\n---------------------------------------------------------");
+                System.out.println("                 USER MANAGEMENT SERVICE                 ");
+                System.out.println("---------------------------------------------------------");
+                System.out.print("  [1] Add New User            [2] Check Borrowed Books  \n");
+                System.out.print("  [3] Check Payment Dues      [4] Check User Details    \n");
+                System.out.print("  [5] Print All Users         [0] Exit                  \n");
+                System.out.println("---------------------------------------------------------");
+                System.out.print("Select Choice  > ");
                 int choice = inputHelper.getInteger();
                 switch (choice) {
                     case 0 -> {
@@ -34,10 +46,15 @@ public class Main {
                     case 3 -> userService.checkPaymentDues();
                     case 4 -> userService.UserDetails();
                     case 5 -> userService.printAllUsers();
-                    default -> System.out.println("Enter a Valid Choice!!");
+                    default -> System.out.println(RED + " [!] Error: Enter a Valid Choice (0-5)!!" + RESET);
                 }
             } else if (ch == 2) {
-                System.out.println("0.Exit\t1.Search Book\t2.Borrow Book\t3.Return Book\t4.List of all Books Available\n->Enter Your Choice : ");
+                System.out.println("\n----------- BOOK SERVICE MENU -----------");
+                System.out.println("  [1] Search Book         [2] Borrow Book");
+                System.out.println("  [3] Return Book         [4] List All Books");
+                System.out.println("  [0] Back to Main Menu");
+                System.out.println("-----------------------------------------");
+                System.out.print("Select an Option: ");
                 int choice = inputHelper.getInteger();
                 switch (choice) {
                     case 0 -> {
@@ -50,10 +67,9 @@ public class Main {
                     case 2 -> bookService.BookBorrow();
                     case 3 -> bookService.ReturnBook();
                     case 4 -> bookService.getAllBooksAvailable();
-                    default -> System.out.println("Enter a Valid Choice!!");
+                    default -> System.out.println(RED + " [!] Error: Enter a Valid Choice (0-5)!!" + RESET);
                 }
-            } else
-                System.out.println("Enter a Valid Choice!!");
+            } else System.out.println(RED + " [!] Error: Enter a Valid Choice (1-2)!!" + RESET);
         }
     }
 }

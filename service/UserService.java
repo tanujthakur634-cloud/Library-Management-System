@@ -1,8 +1,8 @@
 package service;
 
+import PaymentGateway.PaymentGateway;
 import PaymentGateway.UPI;
 import PaymentGateway.Wallet;
-import database.BookDatabase;
 import database.UserDatabase;
 import model.Book;
 import model.User;
@@ -13,7 +13,9 @@ import java.util.Map;
 public class UserService {
 
     InputHelper inputHelper = new InputHelper();
-    UserDatabase userDatabase ;
+    UserDatabase userDatabase;
+    String RED = "\u001B[31m";
+    String RESET = "\u001B[0m";
 
     public UserService(UserDatabase userDatabase) {
         this.userDatabase = userDatabase;
@@ -24,8 +26,12 @@ public class UserService {
         User user = checkUser();
         if (user != null) {
             if (borrowedBooks.containsKey(user)) {
-                System.out.println("*********LIST_OF_BORROWED_BOOKS***********");
-                borrowedBooks.get(user).values().forEach(Book::display);
+                System.out.println("\n📚 BOOKS CURRENTLY WITH " + user.getName().toUpperCase() + ":");
+                int count = 1;
+                for (Book book : borrowedBooks.get(user).values()) {
+                    System.out.printf("   %d. [%d] %s by %s\n", count++, book.getId(), book.getBookName(), book.getAuthor());
+                }
+                System.out.println();
             } else {
                 System.out.println("User does not have any Borrowed Books");
             }
@@ -42,7 +48,8 @@ public class UserService {
         userID++;
         User user = new User(userID, name, phoneNo, 0);
         userDatabase.addUsers(user, userID);
-        System.out.println("The new User's ID is : " + userID);
+        System.out.println("\n[✔] SUCCESS: New User Created Successfully!");
+        System.out.println("    Assigned ID: " + userID);
     }
 
     public User checkUser() {
@@ -59,11 +66,15 @@ public class UserService {
     }
 
     public void printAllUsers() {
-        for (Map.Entry<Integer, User> entry : userDatabase.getUsers().entrySet()) {
-            User user = entry.getValue();
-            user.userDetails();
-            System.out.println("----------------------");
+        System.out.println("\n" + "=".repeat(65));
+        System.out.printf("%-5s | %-20s | %-15s | %-10s\n", "ID", "USER NAME", "PHONE", "DUES");
+        System.out.println("-".repeat(65));
+
+        for (User user : userDatabase.getUsers().values()) {
+            System.out.printf("%-5d | %-20s | %-15s | ₹%-10d\n",
+                    user.getUserID(), user.getName(), user.getPhoneNo(), user.getFine_due());
         }
+        System.out.println("=".repeat(65));
     }
 
     public void checkPaymentDues() throws InterruptedException {
@@ -72,8 +83,9 @@ public class UserService {
             if (user.getFine_due() == 0)
                 System.out.println("No Payment Dues !! ");
             else {
-                System.out.println("Payment Due : " + user.getFine_due());
-                System.out.println("Do You want to pay it Now ? (Y/N)");
+                System.out.println("\u001B[33m" + "⚠️  ATTENTION: You have an outstanding balance of ₹" + user.getFine_due() + "\u001B[0m");
+                System.out.print(" Would you like to settle this now? (Y/N): ");
+
                 char c = inputHelper.getString().charAt(0);
                 if (c == 'Y' || c == 'y') {
                     payDues(user);
@@ -82,24 +94,29 @@ public class UserService {
                 }
             }
         } else {
-            System.out.println("User Does Not exists");
+            System.out.println(RED + " [!] ERROR: User ID not found in the database." + RESET);
         }
     }
 
     public void payDues(User user) throws InterruptedException {
+
         System.out.print("1.UPI\t2.Wallet\n->Enter The Payment Mode : ");
         int choice = inputHelper.getInteger();
-        if (choice == 1) {
-            UPI upi = new UPI();
-            upi.processPayment(user.getFine_due(), user.getUserID());
-            upi.paymentReceipt(user.getFine_due(), user.getUserID());
-            user.setFine_due(0);
-        } else if (choice == 2) {
-            Wallet wallet = new Wallet();
-            wallet.processPayment(user.getFine_due(), user.getUserID());
-            wallet.paymentReceipt(user.getFine_due(), user.getUserID());
-            user.setFine_due(0);
-        } else System.out.println("Invalid Choice!!");
 
+        PaymentGateway paymentGateway;
+
+        if (choice == 1) {
+            paymentGateway = new UPI();
+        } else if (choice == 2) {
+            paymentGateway = new Wallet();
+        } else {
+            System.out.println(RED + " [!] Error: Enter a Valid Choice (1-2)!!" + RESET);
+            return;
+        }
+
+        paymentGateway.processPayment(user.getFine_due(), user.getUserID());
+        paymentGateway.paymentReceipt(user.getFine_due(), user.getUserID(), user);
+
+        user.setFine_due(0);
     }
 }

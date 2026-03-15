@@ -29,10 +29,10 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return  true;
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return userID == user.userID ;
+        return userID == user.userID;
     }
 
     @Override
@@ -41,9 +41,20 @@ public class User {
     }
 
     public void userDetails() {
-        System.out.println("Name : " + name);
-        System.out.println("User ID : " + userID);
-        System.out.println("Phone Number : " + phoneNo);
-        System.out.println("Fine Due : " + fine_due);
+        System.out.println("\n+-------------------------------------------+");
+        System.out.println("  USER PROFILE : ID #" + userID);
+        System.out.println("+-------------------------------------------+");
+        System.out.printf("  NAME    : %s\n", name);
+        System.out.printf("  PHONE   : %s\n", phoneNo);
+        System.out.printf("  BALANCE : ₹%.2f\n", fine_due);
+        System.out.println("+-------------------------------------------+");
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPhoneNo() {
+        return phoneNo;
     }
 }
