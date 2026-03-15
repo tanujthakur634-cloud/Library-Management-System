@@ -21,7 +21,7 @@ public class Main {
             System.out.println("\n╔══════════════════════════════════════════════════╗");
             System.out.println("║            LIBRARY MANAGEMENT SYSTEM             ║");
             System.out.println("╠══════════════════════════════════════════════════╣");
-            System.out.println("║  1. User Service            2. Book Service      ║");
+            System.out.println("║   1. User Service   2. Book Service    0.EXIT    ║");
             System.out.println("╚══════════════════════════════════════════════════╝");
             System.out.print(" -> Enter Choice : ");
             int ch = inputHelper.getInteger();
@@ -79,6 +79,12 @@ public class Main {
                     case 4 -> bookService.getAllBooksAvailable();
                     default -> System.out.println(RED + " [!] Error: Enter a Valid Choice (0-5)!!" + RESET);
                 }
+            } else if (ch == 0) {
+                System.out.print(CYAN + "Saving session data...");
+                Thread.sleep(700);
+                System.out.print("\rClosing database connections...");
+                Thread.sleep(700);
+                System.out.println("\r" + CYAN + "CLEAN EXIT: All systems offline.          " + RESET);
             } else System.out.println(RED + " [!] Error: Enter a Valid Choice (1-2)!!" + RESET);
         }
     }

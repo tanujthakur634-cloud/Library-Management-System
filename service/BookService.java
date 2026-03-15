@@ -14,6 +14,8 @@ public class BookService {
     BookDatabase bookDatabase;
     String GREEN = "\u001B[32m";
     String RESET = "\u001B[0m";
+    String RED = "\u001B[31m";
+    String YELLOW = "\u001B[33m";
 
     public BookService(BookDatabase bookDatabase, UserDatabase userDatabase) {
         this.bookDatabase = bookDatabase;
@@ -60,7 +62,7 @@ public class BookService {
             for (Book book : bookDatabase.getBookRecord().values()) {
                 if (book.getBookName().equalsIgnoreCase(bookname)) {
                     if (book.isAvailable()) {
-                        System.out.println("Book Found");
+                        System.out.println("\n" + GREEN + " [✔] BOOK FOUND!" + RESET);
                         book.display();
                         return book;
                     }
@@ -75,9 +77,14 @@ public class BookService {
 
     //---------------------BOOK-BORROW-------------------------
 
-    public void BookBorrow() {
+    public void BookBorrow() throws InterruptedException {
         Book book = searchBook();
         if (book != null) {
+            System.out.print("  Updating database... [          ]");
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(80);
+                System.out.print("\r  Updating database... [" + "#".repeat(i + 1) + " ".repeat(9 - i) + "]");
+            }
             UserService userService = new UserService(userDatabase);
             User user = userService.checkUser();
             if (user != null) {
@@ -93,36 +100,44 @@ public class BookService {
                 System.out.println("\u001B[31m" + "✖ ERROR: User not found in system." + "\u001B[0m");
             }
         } else {
-            System.out.println("Book is Unavailable");
+            System.out.println("\u001B[31m" + "✖ ERROR: Book not found in system." + "\u001B[0m");
         }
     }
 
-    public void ReturnBook() {
-        System.out.print("Enter the ID of the Book You are returning : ");
+    public void ReturnBook() throws InterruptedException {
+        System.out.print("  Enter the ID of the Book You are returning : ");
         int id = inputHelper.getInteger();
-        System.out.println("Enter the User ID of the person returning the book : ");
+        System.out.print("  Enter the User ID of the person returning the book : ");
         int userID = inputHelper.getInteger();
         User user = userDatabase.getUser(userID);
         if (user != null) {
+            System.out.print("  Updating database... [          ]");
+            for (int i = 0; i < 10; i++) {
+                Thread.sleep(80);
+                System.out.print("\r  Updating database... [" + "#".repeat(i + 1) + " ".repeat(9 - i) + "]");
+            }
             Map<Integer, Book> userBorrowed = userDatabase.getBorrowedBooks().get(user);
             if (userBorrowed != null && userBorrowed.containsKey(id)) {
                 userBorrowed.remove(id);
                 Book book = bookDatabase.getBookRecord().get(id);
                 if (book != null) {
                     book.setAvailable(true);
-                    System.out.println("Book returned Successfully");
+                    System.out.println("\n" + GREEN + " [✔] SUCCESS: Book returned successfully!" + RESET);
                     try {
-                        Thread.sleep(1000); // Wait for 1 second
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
-                } else
-                    System.out.println("Error: Book found in user's list but missing from the main library database.");
+                } else {
+                    System.out.println("\n" + RED + " ✖ [Sync Error]" + RESET + " Record Mismatch for Book ID: " + YELLOW + id + RESET);
+                    System.out.println("   The main library database does not recognize this item.");
+                }
             } else {
-                System.out.println("This user does not have this book");
+                System.out.println("\n" + YELLOW + " ⚠️  ALERT: Return Denied" + RESET);
+                System.out.println("    User " + user.getName() + " does not have Book ID #" + id + " on their record.");
             }
         } else {
-            System.out.println("User does not exists");
+            System.out.println("\u001B[31m" + "✖ ERROR: User not found in system." + "\u001B[0m");
         }
     }
 

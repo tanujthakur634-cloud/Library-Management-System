@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public User checkUser() {
-        System.out.println("  Enter UserID : ");
+        System.out.print("  Enter UserID : ");
         int userID = inputHelper.getInteger();
         return userDatabase.getUser(userID);
     }
